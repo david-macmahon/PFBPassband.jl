@@ -11,5 +11,5 @@ Telescope.  To demonstrate the correctness of the analysis, the computed
 response is used to correct the passband shape of a single coarse channel of
 actual GBT data included in this repository as a test case.
 
-The [notebook](https://github.com/david-macmahon/PFBResponse.jl/pfbresponse.ipynb)
+The [notebook](https://github.com/david-macmahon/PFBResponse.jl/blob/main/pfbresponse.ipynb)
 might be viewable directly on GitHub.
