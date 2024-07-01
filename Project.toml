@@ -1,5 +1,7 @@
+name = "PFBPassband"
+uuid = "b785e3ae-1800-42e5-9c85-93e04f1353d9"
+authors = ["David MacMahon <davidm@astro.berkeley.edu>"]
+version = "0.0.1"
+
 [deps]
 FFTW = "7a1cc6ca-52ef-59f5-83cd-3a7055c09341"
-H5Zbitshuffle = "51b4e782-877f-4ccf-958a-27bf628210da"
-HDF5 = "f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
-Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
