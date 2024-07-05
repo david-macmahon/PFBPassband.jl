@@ -86,6 +86,13 @@ function coefs(pfb::CasperPolyphaseFilterbank)
     window .* lpf
 end
 
+"""
+    passband(h::AbstractVector, nchan, nfine)
+
+Compute the passband response of a channel of a PFB of `nchan` channels whose
+filter coefficients are given in `h`.  The response is computed at `nfine`
+points evenly spaced across the coarse channel.
+"""
 function passband(h::AbstractVector, nchan, nfine)
     # Make sure nfine is large enough
     nchan * nfine > length(h) || error("nfine is too small")
@@ -93,7 +100,7 @@ function passband(h::AbstractVector, nchan, nfine)
     # Make matrix zeros(nchan, nfine)
     m = zeros(nchan, nfine)
 
-    # Copy h to m (fills the first `ntaps` fine channels
+    # Copy h to m (fills the first `ntaps` fine channels)
     copyto!(m, h)
 
     # Compute 2D real FFT of m
@@ -103,7 +110,7 @@ function passband(h::AbstractVector, nchan, nfine)
     # Take adjoint and sum along second dimension to make result Nx1 rather than
     # 1xN.
     response = dropdims(sum(abs2, fm', dims=2); dims=2)
-    # Don't forget the symmetrically redundant parts!
+    # Don't forget to include the symmetrically redundant parts!
     response[1] += sum(abs2, @view(fm[2:end-1,1]))
     response[2:end] .+= reverse(sum(abs2, (@view(fm[2:end-1,2:end]))'; dims=2); dims=1)
 
@@ -114,12 +121,29 @@ function passband(h::AbstractVector, nchan, nfine)
     circshift!(response, nfine÷2)
 end
 
+"""
+    passband(pfb::CasperPolyphaseFilterbank, nfine)
+
+Compute the passband response of a channel of `pfb`.  The response is computed
+at `nfine` points evenly spaced across the PFB channel.
+"""
 function passband(pfb::CasperPolyphaseFilterbank, nfine)
     passband(coefs(pfb), pfb.nchan, nfine)
 end
 
+"""
+    get_num_threads()
+
+Get the current number of threads that FFTW will utilize.
+"""
 get_num_threads() = FFTW.get_num_threads()
 
+"""
+    set_num_threads(num_threads=Sys.CPU_THREADS)
+
+Set the current number of threads that FFTW will utilize.  If `num_threads` is
+not specified, it will default to `Sys.CPU_THREADS`.
+"""
 function set_num_threads(num_threads::Integer=Sys.CPU_THREADS)
     FFTW.set_num_threads(num_threads)
 end
