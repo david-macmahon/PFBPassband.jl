@@ -1,7 +1,7 @@
 name = "PFBPassband"
 uuid = "b785e3ae-1800-42e5-9c85-93e04f1353d9"
 authors = ["David MacMahon <davidm@astro.berkeley.edu>"]
-version = "0.0.1"
+version = "0.0.2"
 
 [deps]
 FFTW = "7a1cc6ca-52ef-59f5-83cd-3a7055c09341"
