@@ -120,7 +120,7 @@ end
 
 get_num_threads() = FFTW.get_num_threads()
 
-function set_num_threads(num_threads::Integer=Threads.nthreads())
+function set_num_threads(num_threads::Integer=Sys.CPU_THREADS)
     FFTW.set_num_threads(num_threads)
 end
 
