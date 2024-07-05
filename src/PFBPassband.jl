@@ -2,7 +2,8 @@ module PFBPassband
 
 using FFTW
 
-export AbstractPolyphaseFilterbank, CasperPolyphaseFilterbank, coefs, passband
+export AbstractPolyphaseFilterbank, CasperPolyphaseFilterbank,
+       coefs!, coefs, passband
 
 abstract type AbstractPolyphaseFilterbank end
 
@@ -78,12 +79,39 @@ Built-in `hanning` function.  For more control, use `DSP.Windows.hanning`.
 """
 hanning(n) = 0.5 .* (1 .+ cospi.(range(-1, stop=1, length=n)))
 
-function coefs(pfb::CasperPolyphaseFilterbank)
+"""
+    coefs!(dest, pfb::CasperPolyphaseFilterbank; normalize=true)
+
+Set the first `pfb.nchans*pfb.ntaps` elements of `dest` to the PFB filter
+coefficients of `pfb`.  Set any remaining elements to zero.
+"""
+function coefs!(dest::AbstractArray, pfb::CasperPolyphaseFilterbank; normalize=true)
     n = pfb.nchan * pfb.ntaps
-    window = pfb.window(n)
-    # LPF function (exclude half-step offset when pfb.bug is true)
-    lpf = pfb.lpf.(((0:n-1).+0.5*(1-pfb.bug)) ./ pfb.nchan .- (pfb.ntaps/2))
-    window .* lpf
+    n <= length(dest) || error("length(dest) < nchan * ntaps")
+    dest[begin:begin+n-1] .= pfb.window(n) .*
+        # LPF function (exclude half-step offset when pfb.bug is true)
+        pfb.lpf.(((0:n-1).+0.5*(1-pfb.bug)) ./ pfb.nchan .- (pfb.ntaps/2))
+    if(normalize)
+        dest[begin:begin+n-1] ./= sum(@view dest[begin:begin+n-1])
+    end
+    # Fill extra locations, if any, with 0
+    dest[begin+n:end] .= 0
+    dest
+end
+
+"""
+    coefs([T], pfb::CasperPolyphaseFilterbank; normalize=true)
+
+Return a new `Vector{T}` containing the PFB filter coefficients of `pfb`.  `T`
+must be `Float16`,`Float32`, or `Float64` (default if not given).
+"""
+function coefs(::Type{T}, pfb::CasperPolyphaseFilterbank; normalize=true) where {T<:Base.IEEEFloat}
+    n = pfb.nchan * pfb.ntaps
+    coefs!(Vector{T}(undef, n), pfb; normalize)
+end
+
+function coefs(pfb::CasperPolyphaseFilterbank; normalize=true)
+    coefs(Float64, pfb; normalize)
 end
 
 """
