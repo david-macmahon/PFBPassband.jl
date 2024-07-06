@@ -11,6 +11,7 @@ abstract type AbstractPolyphaseFilterbank end
     struct CasperPolyphaseFilterbank <: AbstractPolyphaseFilterbank
         nchan::Int
         ntaps::Int
+        width::Float64
         window::Function
         lpf::Function
         bug::Bool
@@ -27,15 +28,16 @@ computed by the constructor rather being explicitly specified by by the user.
 struct CasperPolyphaseFilterbank <: AbstractPolyphaseFilterbank
     nchan::Int
     ntaps::Int
+    width::Float64
     window::Function
     lpf::Function
     bug::Bool
 end
 
 """
-    CasperPolyphaseFilterbank(nchan, ntaps, [window[, lpf[, bug]]])
-    CasperPolyphaseFilterbank(nchan, ntaps; [window,] [lpf,] [bug])
-    CasperPolyphaseFilterbank(; nchan, ntaps, [window,] [lpf,] [bug])
+    CasperPolyphaseFilterbank(nchan, ntaps, [width, [window[, lpf[, bug]]]])
+    CasperPolyphaseFilterbank(nchan, ntaps; [width,] [window,] [lpf,] [bug])
+    CasperPolyphaseFilterbank(; nchan, ntaps, [width,] [window,] [lpf,] [bug])
 
 Constructs a PolyphaseFilterbank object with windowing function window (defaults
 to `hamming`) and low pass filter function `lpf` (defaults to `sinc`).
@@ -45,21 +47,26 @@ be `false` (its default value).
 
 `nchan` is the total number of frequency channels, including redundant chanels
 for negative frequencies that may be omitted by real input (i.e. non-complex
-input) PFB implementaion.  `ntaps` is the number of "taps" (overlapped windows)
-of the PFB implementation.
+input) PFB implementaion.
+
+`ntaps` is the number of "taps" (overlapped windows) of the PFB implementation.
+
+`width` specifies where the frequency response will be -6 dB in power relative
+to the channel width.  It should be between 0 and 1.
 """
-function CasperPolyphaseFilterbank(nchan, ntaps; window=hamming, lpf=sinc, bug=false)
-    CasperPolyphaseFilterbank(nchan, ntaps, window, lpf, bug)
+function CasperPolyphaseFilterbank(nchan, ntaps; width=1.0, window=hamming, lpf=sinc, bug=false)
+    CasperPolyphaseFilterbank(nchan, ntaps, width, window, lpf, bug)
 end
 
-function CasperPolyphaseFilterbank(; nchan, ntaps, window=hamming, lpf=sinc, bug=false)
-    CasperPolyphaseFilterbank(nchan, ntaps, window, lpf, bug)
+function CasperPolyphaseFilterbank(; nchan, ntaps, width=1.0, window=hamming, lpf=sinc, bug=false)
+    CasperPolyphaseFilterbank(nchan, ntaps, width=1.0, window, lpf, bug)
 end
 
 function Base.show(io::IO, pfb::CasperPolyphaseFilterbank)
     print(io, "CasperPolyphaseFilterbank(;")
     print(io, "nchan=$(pfb.nchan),")
     print(io, "ntaps=$(pfb.ntaps),")
+    print(io, "width=$(pfb.width),")
     print(io, "window=$(pfb.window),")
     print(io, "lpf=$(pfb.lpf),")
     print(io, "bug=$(pfb.bug))")
@@ -90,7 +97,7 @@ function coefs!(dest::AbstractArray, pfb::CasperPolyphaseFilterbank; normalize=t
     n <= length(dest) || error("length(dest) < nchan * ntaps")
     dest[begin:begin+n-1] .= pfb.window(n) .*
         # LPF function (exclude half-step offset when pfb.bug is true)
-        pfb.lpf.(((0:n-1).+0.5*(1-pfb.bug)) ./ pfb.nchan .- (pfb.ntaps/2))
+        pfb.lpf.(pfb.width.*(((0:n-1).+0.5*(1-pfb.bug)) ./ pfb.nchan .- (pfb.ntaps/2)))
     if(normalize)
         dest[begin:begin+n-1] ./= sum(@view dest[begin:begin+n-1])
     end

@@ -16,23 +16,24 @@ parameters.  They are:
 
 - Number of channels (`nchan`)
 - Number of taps (`ntaps`)
+- Normalized channel width (`width`)
 - Windowing function (`window`)
 - Low pass filter function (`lpf`)
 - Bug flag (whether to model bug) (`bug`)
 
-The `CasperPolyphaseFilterbank` structure contains fields for each of these five
+The `CasperPolyphaseFilterbank` structure contains fields for each of these
 parameters.  Three constructors are provided to allow flexibility in creating
 such structures.
 
 ```julia
-CasperPolyphaseFilterbank(nchan, ntaps, [window[, lpf[, bug]]])
-CasperPolyphaseFilterbank(nchan, ntaps; [window,] [lpf,] [bug])
-CasperPolyphaseFilterbank(; nchan, ntaps, [window,] [lpf,] [bug])
+CasperPolyphaseFilterbank(nchan, ntaps, [width, [window[, lpf[, bug]]]])
+CasperPolyphaseFilterbank(nchan, ntaps; [width,] [window,] [lpf,] [bug])
+CasperPolyphaseFilterbank(; nchan, ntaps, [width,] [window,] [lpf,] [bug])
 ```
 
 The main difference between these is which parameters are given as positional
-arguments vs keyword arguments.  If not given, `window` defaults to `hamming`;
-`lpf` defaults to `sinc`; and `bug` defaults to `false`.
+arguments vs keyword arguments.  If not given, `width` defaults to 1, window`
+defaults to `hamming`; `lpf` defaults to `sinc`; and `bug` defaults to `false`.
 
 `PFBPassband.jl` provides `hamming` and `hanning` window functions, but does not
 export them to avoid name clashes with `DSP.jl`, which also provides these
@@ -40,16 +41,23 @@ as well as several other window functions suitable for use with
 `PFBPassband.jl`.  The default window function is `hamming` (specifically,
 `PFBPassband.hamming`).
 
+The `width` parameter should be between 0 and 1.  It specifies where the
+frequency response will be -6 dB in power relative to the channel width.  A
+value of 1 puts this point at the channel edge.  Slightly smaller values can be
+used to have the filter roll off start earlier so that the response at the
+channel edge will be somewhat reduced.  This reduces aliasing, but at the
+expense of attenuating the channel edges.
+
 ### Examples
 
 To create a CasperPolyphaseFilterbank with 16 channels and 8 taps (and defaults
-for `window`, `lpf` and `bug`):
+for `width`, `window`, `lpf` and `bug`):
 
 ```julia-repl
 julia> using PFBPassband
 
 julia> pfb = CasperPolyphaseFilterbank(16, 8)
-CasperPolyphaseFilterbank(;nchan=16,ntaps=8,window=hamming,lpf=sinc,bug=false)
+CasperPolyphaseFilterbank(;nchan=16,ntaps=8,width=1.0,window=hamming,lpf=sinc,bug=false)
 ```
 
 ## PFB Filter Coefficients
@@ -72,11 +80,6 @@ These can be plotted using any Julia plotting package (UnicodePlots shown
 here):
 
 ```
-julia> using PFBPassband, UnicodePlots
-
-julia> pfb = CasperPolyphaseFilterbank(16, 8)
-CasperPolyphaseFilterbank(;nchan=16,ntaps=8,window=hamming,lpf=sinc,bug=false)
-
 julia> h = coefs(pfb);
 
 julia> lineplot(h, xlim=(1,length(h)))
