@@ -1,4 +1,5 @@
 [deps]
+DSP = "717857b8-e6f2-59f4-9121-6e50c889abd2"
 FFTW = "7a1cc6ca-52ef-59f5-83cd-3a7055c09341"
 H5Zbitshuffle = "51b4e782-877f-4ccf-958a-27bf628210da"
 HDF5 = "f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
