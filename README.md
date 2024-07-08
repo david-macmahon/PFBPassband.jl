@@ -187,18 +187,43 @@ optional `num_threads` argument is not specified it defaults to
 from Julia's thread pool.  FFTW can run multithreaded even when Julia is
 started with `--threads=1`.
 
-## Notebook
+## Notebooks
 
-This repository contains a Jupyter notebook that describes how to calculate the
-frequency response of a *polyphase filter bank* (PFB).  Along the way it
-describes the theory of operation of a PFB, how the PFB frequency response is
-observed in practice, and how aliasing plays a role in the PFB response.
+This repository contains two Jupyter notebooks in the `notebooks` directory.
+They are runnable in any Jupyter installation that has a modern Julia kernel
+available, but they are perhaps most easily used from within Visual Studio Code
+with the Julia extension.
 
-After that the notebook presents a detailed step by step walk through the
-analytic computation of the response of a specific PFB in use at the Green Bank
-Telescope.  To demonstrate the correctness of the analysis, the computed
-response is used to correct the passband shape of a single coarse channel of
-actual GBT data included in this repository as a test case.
+* [01_pfb_response.ipynb](notebooks/01_pfb_response.ipynb)
 
-The [notebook](https://github.com/david-macmahon/PFBPassband.jl/blob/main/notebooks/01_pfb_response.ipynb)
-might be viewable directly on GitHub.
+  This notebook describes how to compute the frequency response of a
+  *polyphase filter bank* (PFB).  Along the way it
+  presents the theory of operation of a PFB, how the PFB frequency response is
+  observed in practice, and how aliasing plays a role in the PFB response.
+
+  After that the notebook presents a detailed step by step walk through the
+  analytic computation of the response of a specific PFB in use at the Green
+  Bank Telescope.  To demonstrate the correctness of the analysis, the computed
+  response is used to correct the passband shape of a single coarse channel of
+  actual GBT data included in this repository as a test case.
+
+  If the above link doesn't work, this [notebook](
+  https://github.com/david-macmahon/PFBPassband.jl/blob/main/notebooks/01_pfb_response.ipynb)
+  may be viewed directly on GitHub.
+
+* [02_PFBPassband.ipynb](notebooks/02_PFBPassband.ipynb)
+
+  This notebook introduces the `PFBPassband,jl` package.  It covers the
+  following topics:
+
+  1. How to use `PFBPassband.jl` to model CASPER polyphase fitlerbanks
+  1. How to generate the PFB filter coefficients for a CASPER polyphase filterbank
+  1. How to use `DSP.jl` to compute the (unaliased) freqeuncy response of PFB
+     filter coefficients
+  1. How to use the `passband` function to compute the (aliased) PFB passband
+  1. Presents the PFB passband shape of PFBs in active use at several different
+     radio telescopes
+
+  If the above link doesn't work, this [notebook](
+  https://github.com/david-macmahon/PFBPassband.jl/blob/main/notebooks/02_PFBPassband.ipynb)
+  may be viewed directly on GitHub.
