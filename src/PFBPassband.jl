@@ -59,7 +59,7 @@ function CasperPolyphaseFilterbank(nchan, ntaps; width=1.0, window=hamming, lpf=
 end
 
 function CasperPolyphaseFilterbank(; nchan, ntaps, width=1.0, window=hamming, lpf=sinc, bug=false)
-    CasperPolyphaseFilterbank(nchan, ntaps, width=1.0, window, lpf, bug)
+    CasperPolyphaseFilterbank(nchan, ntaps, width, window, lpf, bug)
 end
 
 function Base.show(io::IO, pfb::CasperPolyphaseFilterbank)
