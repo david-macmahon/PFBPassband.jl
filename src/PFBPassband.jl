@@ -35,7 +35,7 @@ struct CasperPolyphaseFilterbank <: AbstractPolyphaseFilterbank
 end
 
 """
-    CasperPolyphaseFilterbank(nchan, ntaps, [width, [window[, lpf[, bug]]]])
+    CasperPolyphaseFilterbank(nchan, ntaps, width, [window[, lpf[, bug]]])
     CasperPolyphaseFilterbank(nchan, ntaps; [width,] [window,] [lpf,] [bug])
     CasperPolyphaseFilterbank(; nchan, ntaps, [width,] [window,] [lpf,] [bug])
 
@@ -54,6 +54,10 @@ input) PFB implementaion.
 `width` specifies where the frequency response will be -6 dB in power relative
 to the channel width.  It should be between 0 and 1.
 """
+function CasperPolyphaseFilterbank(nchan, ntaps, width, window=hamming, lpf=sinc)
+    CasperPolyphaseFilterbank(nchan, ntaps, width, window, lpf, false)
+end
+
 function CasperPolyphaseFilterbank(nchan, ntaps; width=1.0, window=hamming, lpf=sinc, bug=false)
     CasperPolyphaseFilterbank(nchan, ntaps, width, window, lpf, bug)
 end

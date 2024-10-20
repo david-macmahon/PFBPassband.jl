@@ -26,7 +26,7 @@ parameters.  Three constructors are provided to allow flexibility in creating
 such structures.
 
 ```julia
-CasperPolyphaseFilterbank(nchan, ntaps, [width, [window[, lpf[, bug]]]])
+CasperPolyphaseFilterbank(nchan, ntaps, width, [window[, lpf[, bug]]])
 CasperPolyphaseFilterbank(nchan, ntaps; [width,] [window,] [lpf,] [bug])
 CasperPolyphaseFilterbank(; nchan, ntaps, [width,] [window,] [lpf,] [bug])
 ```
