@@ -90,6 +90,9 @@ Built-in `hanning` function.  For more control, use `DSP.Windows.hanning`.
 """
 hanning(n) = 0.5 .* (1 .+ cospi.(range(-1, stop=1, length=n)))
 
+# Include pre-defined CasperPolyphaseFilterbank instances for well known PFBs
+include("casperpfbs.jl")
+
 """
     coefs!(dest, pfb::CasperPolyphaseFilterbank; normalize=true)
 

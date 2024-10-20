@@ -60,6 +60,22 @@ julia> pfb = CasperPolyphaseFilterbank(16, 8)
 CasperPolyphaseFilterbank(;nchan=16,ntaps=8,width=1.0,window=hamming,lpf=sinc,bug=false)
 ```
 
+### Pre-defined PFBs
+
+The `CasperFPBs` submodule contains pre-defined `CasperPolyphaseFilterbank`
+objects for some CASPER PFB implementations that are known to be in active use.
+
+| name         | nchan | ntaps | width | window  | lpf  |  bug  |
+|:-------------|------:|------:|------:|:-------:|:----:|:-----:|
+| `ATA1K`      |  2048 |     4 |   1.0 | hamming | sinc | true  |
+| `COSMIC1K`   |  2048 |     4 |   1.0 | hamming | sinc | true  |
+| `GBT512`     |  1024 |    12 |   1.0 | hamming | sinc | true  |
+| `MEERKAT1K`  |  2047 |    16 |  0.91 | hanning | sinc | false |
+| `MEERKAT4K`  |  8192 |    16 |  1.00 | hanning | sinc | false |
+| `MEERKAT32K` | 65536 |     4 |  1.00 | hanning | sinc | false |
+
+Pull requests are welcome for additional PFB implementations.
+
 ## PFB Filter Coefficients
 
 The PFB filter coefficients for a CasperPolyphaseFilterbank can be obtained by
