@@ -70,7 +70,7 @@ objects for some CASPER PFB implementations that are known to be in active use.
 | `ATA1K`      |  2048 |     4 |   1.0 | hamming | sinc | true  |
 | `COSMIC1K`   |  2048 |     4 |   1.0 | hamming | sinc | true  |
 | `GBT512`     |  1024 |    12 |   1.0 | hamming | sinc | true  |
-| `MEERKAT1K`  |  2047 |    16 |  0.91 | hanning | sinc | false |
+| `MEERKAT1K`  |  2048 |    16 |  0.91 | hanning | sinc | false |
 | `MEERKAT4K`  |  8192 |    16 |  1.00 | hanning | sinc | false |
 | `MEERKAT32K` | 65536 |     4 |  1.00 | hanning | sinc | false |
 
