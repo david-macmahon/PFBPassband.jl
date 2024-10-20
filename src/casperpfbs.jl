@@ -1,5 +1,8 @@
 module CasperPFBs
 
+using ..PFBPassband
+using ..PFBPassband: hamming, hanning
+
 const ATA1K = CasperPolyphaseFilterbank(;
     nchan=2^11, ntaps=4, width=1.0, window=hamming, lpf=sinc, bug=true
 )
